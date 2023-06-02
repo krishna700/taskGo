@@ -51,6 +51,11 @@ dependencies:
   # Adds State Management functionality to the application
   provider: ^6.0.5
 
+  # Provides a path to the application directory
+  # This enables us to use the device storage
+
+  path_provider: ^2.0.15
+
 
 dev_dependencies:
   flutter_test:

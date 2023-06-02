@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:taskgo/database/isr_db.dart';
+
 import 'package:taskgo/task_go_app.dart';
 
 void main() {
@@ -11,7 +13,9 @@ void main() {
   runZonedGuarded<Future<void>>(() async {
     //Ensures the widget is initialized before calling any other methods
     WidgetsFlutterBinding.ensureInitialized();
-
+    //Init isar DB for storing tasks
+    initDB();
+    //Run the TaskGoApp
     runApp(
       const TaskGoApp(),
     );
