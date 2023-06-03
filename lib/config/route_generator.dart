@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:taskgo/features/home/home_screen.dart';
+import 'package:taskgo/splash_screen.dart';
+
+import '../features/add_task/add_task.dart';
 
 /// Named Routes
 
 const String splashRoute = '/splash';
-const String home = '/home';
+const String homeRoute = '/home';
+const String addTaskRoute = '/add_task';
 
 class RouteGenerator {
   /// Dynamicly generate routes to navigate through named routes.
@@ -11,14 +16,26 @@ class RouteGenerator {
     switch (settings.name) {
       ///Initial route
       case splashRoute:
-      // return MaterialPageRoute(builder: (context) => PlainScreen());
+        return MaterialPageRoute(
+          builder: (context) => const SplashScreen(),
+        );
+
       ///Home Screen
-      case home:
+      case homeRoute:
+        return MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        );
+
+      ///Add task Screen
+      case addTaskRoute:
+        return MaterialPageRoute(
+          builder: (context) => const AddTaskScreen(),
+        );
     }
     return _generateErrorRoute();
   }
 
-  ///Returns a widget when a null route is encountered
+  ///Returns an error widget when a null route is encountered
   ///In general [generateRoute] shouldn't return null
 
   static Route<dynamic> _generateErrorRoute() {

@@ -53,8 +53,13 @@ dependencies:
 
   # Provides a path to the application directory
   # This enables us to use the device storage
-
   path_provider: ^2.0.15
+
+  #This helps us to show lottie animations in the application
+  lottie: ^2.3.2
+
+  #Curved navigation bar for home screen
+  curved_nav_bar: ^0.0.2
 
 
 dev_dependencies:
@@ -85,9 +90,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+     - assets/lottie/
+     - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
