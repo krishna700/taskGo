@@ -5,12 +5,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 ///Global theme class for the app
 
+//Primary color of the app
+const Color primaryColor = Colors.blue;
+
 class AppTheme {
   ///Returns a Light Theme which is passed as initial theme to the main app.
   static ThemeData getLightTheme() {
     return ThemeData.light().copyWith(
       //Primary color of the app
-      primaryColor: Colors.white,
+      primaryColor: primaryColor,
       accentColor: Colors.black,
       accentColorBrightness: Brightness.dark,
       toggleableActiveColor: Colors.blue[900],

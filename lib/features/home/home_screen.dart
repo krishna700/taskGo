@@ -1,10 +1,10 @@
-import 'package:curved_nav_bar/curved_bar/curved_action_bar.dart';
-import 'package:curved_nav_bar/fab_bar/fab_bottom_app_bar_item.dart';
-import 'package:curved_nav_bar/flutter_curved_bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:taskgo/config/config.dart';
+
 import 'package:taskgo/features/all_tasks/all_tasks.dart';
 import 'package:taskgo/features/search_task/search_task.dart';
+
+import '../../config/config.dart';
+import '../../util/curved_nav_bar/curved_nav_bar.dart';
 
 /// [HomeScreen] creates a [StatefulWidget] for the home Screen
 /// It contains the bottom navigation bar which consists of
@@ -22,8 +22,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return CurvedNavBar(
       extendBody: false,
+      //Action bar item for adding task
       actionButton: CurvedActionBar(
-        onTab: (value) {},
+        onTab: (value) {
+          //Pushes the AddTaskScreen in the stack
+          Navigator.of(context).pushNamed(addTaskRoute);
+        },
         activeIcon: Container(
           padding: const EdgeInsets.all(8),
           decoration:
@@ -59,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
       activeColor: Colors.blue,
       navBarBackgroundColor: Colors.white,
       inActiveColor: Colors.black45,
+      //AppBar item for home & search
       appBarItems: [
         FABBottomAppBarItem(
           activeIcon: const Icon(
@@ -83,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
           text: 'Search',
         ),
       ],
+      //Screens for showing the screens on tap navigation bar items
       bodyItems: const [
         TaskDashboardScreen(),
         SearchTaskScreen(),

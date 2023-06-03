@@ -58,8 +58,6 @@ dependencies:
   #This helps us to show lottie animations in the application
   lottie: ^2.3.2
 
-  #Curved navigation bar for home screen
-  curved_nav_bar: ^0.0.2
 
 
 dev_dependencies:
