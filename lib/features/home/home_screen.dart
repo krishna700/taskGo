@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:taskgo/features/all_tasks/all_tasks.dart';
-import 'package:taskgo/features/search_task/search_task.dart';
 
 import '../../config/config.dart';
 import '../../util/curved_nav_bar/curved_nav_bar.dart';
@@ -55,43 +54,43 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Icon(
             Icons.add,
             size: 50,
-            color: Colors.orange,
+            color: primaryColor,
           ),
         ),
         text: "Add Task",
       ),
-      activeColor: Colors.blue,
+      activeColor: primaryColor,
       navBarBackgroundColor: Colors.white,
       inActiveColor: Colors.black45,
       //AppBar item for home & search
       appBarItems: [
         FABBottomAppBarItem(
           activeIcon: const Icon(
-            Icons.home,
+            Icons.dashboard_rounded,
             color: Colors.blue,
           ),
           inActiveIcon: const Icon(
-            Icons.home,
+            Icons.dashboard_rounded,
             color: Colors.black26,
           ),
-          text: 'Home',
+          text: 'Dashboard',
         ),
         FABBottomAppBarItem(
           activeIcon: const Icon(
-            Icons.search,
+            Icons.task_sharp,
             color: Colors.blue,
           ),
           inActiveIcon: const Icon(
-            Icons.search,
+            Icons.task_sharp,
             color: Colors.black26,
           ),
-          text: 'Search',
+          text: 'All tasks',
         ),
       ],
       //Screens for showing the screens on tap navigation bar items
       bodyItems: const [
         TaskDashboardScreen(),
-        SearchTaskScreen(),
+        AllTasksScreen(),
       ],
     );
   }

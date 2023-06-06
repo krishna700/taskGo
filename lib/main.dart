@@ -15,7 +15,7 @@ void main() {
     //Ensures the widget is initialized before calling any other methods
     WidgetsFlutterBinding.ensureInitialized();
     //Init isar DB for storing tasks
-    MainRepository.initDB();
+    initDB();
     //Run the TaskGoApp
     runApp(
       const TaskGoApp(),

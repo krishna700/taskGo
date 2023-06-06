@@ -32,48 +32,43 @@ const TaskSchema = CollectionSchema(
       name: r'dueDateTime',
       type: IsarType.dateTime,
     ),
-    r'isCompleted': PropertySchema(
+    r'hasDueDate': PropertySchema(
       id: 3,
+      name: r'hasDueDate',
+      type: IsarType.bool,
+    ),
+    r'isCompleted': PropertySchema(
+      id: 4,
       name: r'isCompleted',
       type: IsarType.bool,
     ),
+    r'isDone': PropertySchema(
+      id: 5,
+      name: r'isDone',
+      type: IsarType.bool,
+    ),
+    r'isOverDue': PropertySchema(
+      id: 6,
+      name: r'isOverDue',
+      type: IsarType.bool,
+    ),
     r'isReminderEnabled': PropertySchema(
-      id: 4,
+      id: 7,
       name: r'isReminderEnabled',
       type: IsarType.bool,
     ),
-    r'isTaskCompleted': PropertySchema(
-      id: 5,
-      name: r'isTaskCompleted',
-      type: IsarType.bool,
-    ),
-    r'isTaskHighPriority': PropertySchema(
-      id: 6,
-      name: r'isTaskHighPriority',
-      type: IsarType.bool,
-    ),
-    r'isTaskLowPriority': PropertySchema(
-      id: 7,
-      name: r'isTaskLowPriority',
-      type: IsarType.bool,
-    ),
-    r'isTaskMediumPriority': PropertySchema(
-      id: 8,
-      name: r'isTaskMediumPriority',
-      type: IsarType.bool,
-    ),
     r'priority': PropertySchema(
-      id: 9,
+      id: 8,
       name: r'priority',
       type: IsarType.long,
     ),
     r'taskName': PropertySchema(
-      id: 10,
+      id: 9,
       name: r'taskName',
       type: IsarType.string,
     ),
     r'updatedOn': PropertySchema(
-      id: 11,
+      id: 10,
       name: r'updatedOn',
       type: IsarType.dateTime,
     )
@@ -117,15 +112,14 @@ void _taskSerialize(
   writer.writeDateTime(offsets[0], object.createdOn);
   writer.writeString(offsets[1], object.description);
   writer.writeDateTime(offsets[2], object.dueDateTime);
-  writer.writeBool(offsets[3], object.isCompleted);
-  writer.writeBool(offsets[4], object.isReminderEnabled);
-  writer.writeBool(offsets[5], object.isTaskCompleted);
-  writer.writeBool(offsets[6], object.isTaskHighPriority);
-  writer.writeBool(offsets[7], object.isTaskLowPriority);
-  writer.writeBool(offsets[8], object.isTaskMediumPriority);
-  writer.writeLong(offsets[9], object.priority);
-  writer.writeString(offsets[10], object.taskName);
-  writer.writeDateTime(offsets[11], object.updatedOn);
+  writer.writeBool(offsets[3], object.hasDueDate);
+  writer.writeBool(offsets[4], object.isCompleted);
+  writer.writeBool(offsets[5], object.isDone);
+  writer.writeBool(offsets[6], object.isOverDue);
+  writer.writeBool(offsets[7], object.isReminderEnabled);
+  writer.writeLong(offsets[8], object.priority);
+  writer.writeString(offsets[9], object.taskName);
+  writer.writeDateTime(offsets[10], object.updatedOn);
 }
 
 Task _taskDeserialize(
@@ -139,11 +133,11 @@ Task _taskDeserialize(
   object.description = reader.readStringOrNull(offsets[1]);
   object.dueDateTime = reader.readDateTimeOrNull(offsets[2]);
   object.id = id;
-  object.isCompleted = reader.readBoolOrNull(offsets[3]);
-  object.isReminderEnabled = reader.readBool(offsets[4]);
-  object.priority = reader.readLong(offsets[9]);
-  object.taskName = reader.readString(offsets[10]);
-  object.updatedOn = reader.readDateTime(offsets[11]);
+  object.isCompleted = reader.readBoolOrNull(offsets[4]);
+  object.isReminderEnabled = reader.readBool(offsets[7]);
+  object.priority = reader.readLong(offsets[8]);
+  object.taskName = reader.readString(offsets[9]);
+  object.updatedOn = reader.readDateTime(offsets[10]);
   return object;
 }
 
@@ -161,9 +155,9 @@ P _taskDeserializeProp<P>(
     case 2:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
-      return (reader.readBoolOrNull(offset)) as P;
-    case 4:
       return (reader.readBool(offset)) as P;
+    case 4:
+      return (reader.readBoolOrNull(offset)) as P;
     case 5:
       return (reader.readBool(offset)) as P;
     case 6:
@@ -171,12 +165,10 @@ P _taskDeserializeProp<P>(
     case 7:
       return (reader.readBool(offset)) as P;
     case 8:
-      return (reader.readBool(offset)) as P;
-    case 9:
       return (reader.readLong(offset)) as P;
-    case 10:
+    case 9:
       return (reader.readString(offset)) as P;
-    case 11:
+    case 10:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -184,7 +176,7 @@ P _taskDeserializeProp<P>(
 }
 
 Id _taskGetId(Task object) {
-  return object.id;
+  return object.id ?? Isar.autoIncrement;
 }
 
 List<IsarLinkBase<dynamic>> _taskGetLinks(Task object) {
@@ -539,7 +531,33 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> idEqualTo(Id value) {
+  QueryBuilder<Task, Task, QAfterFilterCondition> hasDueDateEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hasDueDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> idEqualTo(Id? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -549,7 +567,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> idGreaterThan(
-    Id value, {
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -562,7 +580,7 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> idLessThan(
-    Id value, {
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -575,8 +593,8 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
   }
 
   QueryBuilder<Task, Task, QAfterFilterCondition> idBetween(
-    Id lower,
-    Id upper, {
+    Id? lower,
+    Id? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -617,51 +635,29 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterFilterCondition> isDoneEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isDone',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> isOverDueEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isOverDue',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterFilterCondition> isReminderEnabledEqualTo(
       bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isReminderEnabled',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> isTaskCompletedEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isTaskCompleted',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> isTaskHighPriorityEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isTaskHighPriority',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> isTaskLowPriorityEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isTaskLowPriority',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterFilterCondition> isTaskMediumPriorityEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'isTaskMediumPriority',
         value: value,
       ));
     });
@@ -943,6 +939,18 @@ extension TaskQuerySortBy on QueryBuilder<Task, Task, QSortBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> sortByHasDueDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasDueDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByHasDueDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasDueDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> sortByIsCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isCompleted', Sort.asc);
@@ -955,6 +963,30 @@ extension TaskQuerySortBy on QueryBuilder<Task, Task, QSortBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsDone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDone', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsDoneDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDone', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsOverDue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isOverDue', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsOverDueDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isOverDue', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> sortByIsReminderEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isReminderEnabled', Sort.asc);
@@ -964,54 +996,6 @@ extension TaskQuerySortBy on QueryBuilder<Task, Task, QSortBy> {
   QueryBuilder<Task, Task, QAfterSortBy> sortByIsReminderEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isReminderEnabled', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> sortByIsTaskCompleted() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskCompleted', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> sortByIsTaskCompletedDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskCompleted', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> sortByIsTaskHighPriority() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskHighPriority', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> sortByIsTaskHighPriorityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskHighPriority', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> sortByIsTaskLowPriority() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskLowPriority', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> sortByIsTaskLowPriorityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskLowPriority', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> sortByIsTaskMediumPriority() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskMediumPriority', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> sortByIsTaskMediumPriorityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskMediumPriority', Sort.desc);
     });
   }
 
@@ -1089,6 +1073,18 @@ extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> thenByHasDueDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasDueDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByHasDueDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hasDueDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1113,6 +1109,30 @@ extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsDone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDone', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsDoneDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isDone', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsOverDue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isOverDue', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsOverDueDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isOverDue', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> thenByIsReminderEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isReminderEnabled', Sort.asc);
@@ -1122,54 +1142,6 @@ extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
   QueryBuilder<Task, Task, QAfterSortBy> thenByIsReminderEnabledDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isReminderEnabled', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> thenByIsTaskCompleted() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskCompleted', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> thenByIsTaskCompletedDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskCompleted', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> thenByIsTaskHighPriority() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskHighPriority', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> thenByIsTaskHighPriorityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskHighPriority', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> thenByIsTaskLowPriority() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskLowPriority', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> thenByIsTaskLowPriorityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskLowPriority', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> thenByIsTaskMediumPriority() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskMediumPriority', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Task, Task, QAfterSortBy> thenByIsTaskMediumPriorityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'isTaskMediumPriority', Sort.desc);
     });
   }
 
@@ -1230,39 +1202,33 @@ extension TaskQueryWhereDistinct on QueryBuilder<Task, Task, QDistinct> {
     });
   }
 
+  QueryBuilder<Task, Task, QDistinct> distinctByHasDueDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hasDueDate');
+    });
+  }
+
   QueryBuilder<Task, Task, QDistinct> distinctByIsCompleted() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isCompleted');
     });
   }
 
+  QueryBuilder<Task, Task, QDistinct> distinctByIsDone() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isDone');
+    });
+  }
+
+  QueryBuilder<Task, Task, QDistinct> distinctByIsOverDue() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isOverDue');
+    });
+  }
+
   QueryBuilder<Task, Task, QDistinct> distinctByIsReminderEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isReminderEnabled');
-    });
-  }
-
-  QueryBuilder<Task, Task, QDistinct> distinctByIsTaskCompleted() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isTaskCompleted');
-    });
-  }
-
-  QueryBuilder<Task, Task, QDistinct> distinctByIsTaskHighPriority() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isTaskHighPriority');
-    });
-  }
-
-  QueryBuilder<Task, Task, QDistinct> distinctByIsTaskLowPriority() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isTaskLowPriority');
-    });
-  }
-
-  QueryBuilder<Task, Task, QDistinct> distinctByIsTaskMediumPriority() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'isTaskMediumPriority');
     });
   }
 
@@ -1311,39 +1277,33 @@ extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Task, bool, QQueryOperations> hasDueDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hasDueDate');
+    });
+  }
+
   QueryBuilder<Task, bool?, QQueryOperations> isCompletedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isCompleted');
     });
   }
 
+  QueryBuilder<Task, bool, QQueryOperations> isDoneProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isDone');
+    });
+  }
+
+  QueryBuilder<Task, bool, QQueryOperations> isOverDueProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isOverDue');
+    });
+  }
+
   QueryBuilder<Task, bool, QQueryOperations> isReminderEnabledProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isReminderEnabled');
-    });
-  }
-
-  QueryBuilder<Task, bool, QQueryOperations> isTaskCompletedProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isTaskCompleted');
-    });
-  }
-
-  QueryBuilder<Task, bool, QQueryOperations> isTaskHighPriorityProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isTaskHighPriority');
-    });
-  }
-
-  QueryBuilder<Task, bool, QQueryOperations> isTaskLowPriorityProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isTaskLowPriority');
-    });
-  }
-
-  QueryBuilder<Task, bool, QQueryOperations> isTaskMediumPriorityProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'isTaskMediumPriority');
     });
   }
 

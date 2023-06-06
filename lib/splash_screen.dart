@@ -75,6 +75,9 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
             ),
+            Container(
+              height: 100,
+            ),
           ],
         ),
       ),

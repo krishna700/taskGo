@@ -58,6 +58,27 @@ dependencies:
   #This helps us to show lottie animations in the application
   lottie: ^2.3.2
 
+  #A generic bottom picker plugin
+  #This enables picking up generic list data, date, time
+  bottom_picker: ^2.0.2
+
+  #Provides internationalization and localization facilities, 
+  #including message translation, plurals and genders, date/number formatting and parsing, and bidirectional text.
+  intl: ^0.18.1
+
+  #Provides an option to notify users about success, errors or any message
+  flutter_dropdown_alert: ^1.0.7
+
+  #Generic overlay loader
+  loader_overlay: ^2.2.0
+
+  #Animated loading indicator
+  flutter_spinkit: ^5.2.0
+  
+  #Enables lazy loading of lists/grids
+  infinite_scroll_pagination: ^3.2.0
+
+
 
 
 dev_dependencies:

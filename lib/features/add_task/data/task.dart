@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:taskgo/util/constants.dart';
 
 part 'task.g.dart';
 
@@ -9,7 +10,7 @@ part 'task.g.dart';
 @Name("Task")
 class Task {
   //Auto Increment task id
-  Id id = Isar.autoIncrement;
+  Id? id;
   //Late initialsed Task name
   late String taskName;
   //Nullable task description
@@ -34,11 +35,24 @@ class Task {
   late DateTime updatedOn;
 
   ///Getters for task details
-  ///
 
-  bool get isTaskCompleted => isCompleted != null && isCompleted!;
+  bool get isDone => isCompleted != null && isCompleted!;
 
-  bool get isTaskHighPriority => priority == 3;
-  bool get isTaskMediumPriority => priority == 2;
-  bool get isTaskLowPriority => priority == 1;
+  bool get hasDueDate => dueDateTime != null;
+
+  //Getter for is task overdue
+  bool get isOverDue {
+    var now = DateTime.now();
+    //if no due date, return false
+    if (!hasDueDate) {
+      return false;
+    }
+    //if current time is after dueDateTime, return true
+    //Task is overdue
+    if (now.isAfter(dueDateTime!)) {
+      return true;
+    }
+    //else return false
+    return false;
+  }
 }
