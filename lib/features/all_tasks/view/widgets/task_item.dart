@@ -23,25 +23,25 @@ class TaskItem extends StatelessWidget {
     final allTasksProvider =
         Provider.of<AllTasksProvider>(context, listen: false);
 
-    return InkWell(
-      onTap: () {
-        //Navigates to edit task screen
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AddTaskScreen(
-              task: task,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: InkWell(
+        onTap: () {
+          //Navigates to edit task screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddTaskScreen(
+                task: task,
+              ),
             ),
-          ),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
+          );
+        },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -84,22 +84,34 @@ class TaskItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //task name
-                  Text(
-                    task.taskName,
-                    style: task.isDone
-                        ? const TextStyle(
-                            fontSize: 18,
-                            decoration: TextDecoration.lineThrough,
-                            color: Color(0xFF2A2E49),
-                            fontWeight: FontWeight.w400,
-                          )
-                        : TextStyle(
-                            fontSize: 18,
-                            color: task.isOverDue
-                                ? Colors.red
-                                : const Color(0xFF2A2E49),
-                            fontWeight: FontWeight.w400,
-                          ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          task.taskName,
+                          style: task.isDone
+                              ? const TextStyle(
+                                  fontSize: 18,
+                                  decoration: TextDecoration.lineThrough,
+                                  color: Color(0xFF2A2E49),
+                                  fontWeight: FontWeight.w400,
+                                )
+                              : TextStyle(
+                                  fontSize: 18,
+                                  color: task.isOverDue
+                                      ? Colors.red
+                                      : const Color(0xFF2A2E49),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                        ),
+                      ),
+                      task.isReminderEnabled
+                          ? Icon(
+                              Icons.notification_add,
+                              color: primaryColor.withOpacity(0.4),
+                            )
+                          : const Offstage(),
+                    ],
                   ),
                   const SizedBox(height: 2),
                   //task description if valid string
@@ -138,7 +150,13 @@ class TaskItem extends StatelessWidget {
                             task.hasDueDate
                                 ? task.dueDateTime!.format(Constants.deadline)
                                 : 'No Deadline',
-                            style: AppTheme.text3,
+                            style: task.isOverDue
+                                ? const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w400,
+                                  )
+                                : AppTheme.text3,
                           ),
                         ],
                       ),

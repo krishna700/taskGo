@@ -79,28 +79,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         elevation: 0.5,
         centerTitle: true,
         backgroundColor: Colors.white,
-        title: Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: pageTitle,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor,
-                  fontSize: 28,
-                ),
-              ),
-              const TextSpan(
-                text: 'Task',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                  fontSize: 18,
-                ),
-              ),
-            ],
-          ),
-        ),
+        title: appBarTitle(pageTitle, "Task"),
         actions: [
           _buildDeleteTaskButton(),
         ],

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:taskgo/config/app_theme.dart';
+
 import 'package:taskgo/features/all_tasks/all_tasks.dart';
 import 'package:taskgo/features/all_tasks/view/widgets/empty_task_widget.dart';
 import 'package:taskgo/features/all_tasks/view/widgets/task_item.dart';
+import 'package:taskgo/util/util.dart';
 
 ///[AllTasksScreen] create a widget for showing all the tasks in DB
 /// Uses a stream builder to show the tasks in realtime
@@ -26,28 +27,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
         elevation: 0.5,
         centerTitle: true,
         backgroundColor: Colors.white,
-        title: const Text.rich(
-          TextSpan(
-            children: [
-              TextSpan(
-                text: "All ",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor,
-                  fontSize: 28,
-                ),
-              ),
-              TextSpan(
-                text: 'Tasks',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey,
-                  fontSize: 18,
-                ),
-              ),
-            ],
-          ),
-        ),
+        title: appBarTitle("All ", "Tasks"),
       ),
       body: SafeArea(
         child: Padding(

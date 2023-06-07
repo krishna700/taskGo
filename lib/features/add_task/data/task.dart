@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:taskgo/util/constants.dart';
+import 'package:taskgo/util/util.dart';
 
 part 'task.g.dart';
 
@@ -49,10 +50,27 @@ class Task {
     }
     //if current time is after dueDateTime, return true
     //Task is overdue
-    if (now.isAfter(dueDateTime!)) {
-      return true;
+    return now.isAfter(dueDateTime!) && !isDone;
+  }
+
+  bool get isTodaysTask {
+    //if no due date, return false
+    if (!hasDueDate) {
+      return false;
     }
-    //else return false
-    return false;
+    //return is data today
+    //which implies the task is today's task
+    return isDateToday(dueDateTime!) && !isDone;
+  }
+
+  bool get isUpcomingTask {
+    //if no due date, return false
+    if (!hasDueDate) {
+      return false;
+    }
+    //return is data with in 10
+    //is not overdue
+    //which implies the task is today's task
+    return isDateUpcoming(dueDateTime!) && !isOverDue && !isDone;
   }
 }

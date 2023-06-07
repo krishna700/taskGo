@@ -57,18 +57,28 @@ const TaskSchema = CollectionSchema(
       name: r'isReminderEnabled',
       type: IsarType.bool,
     ),
-    r'priority': PropertySchema(
+    r'isTodaysTask': PropertySchema(
       id: 8,
+      name: r'isTodaysTask',
+      type: IsarType.bool,
+    ),
+    r'isUpcomingTask': PropertySchema(
+      id: 9,
+      name: r'isUpcomingTask',
+      type: IsarType.bool,
+    ),
+    r'priority': PropertySchema(
+      id: 10,
       name: r'priority',
       type: IsarType.long,
     ),
     r'taskName': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'taskName',
       type: IsarType.string,
     ),
     r'updatedOn': PropertySchema(
-      id: 10,
+      id: 12,
       name: r'updatedOn',
       type: IsarType.dateTime,
     )
@@ -117,9 +127,11 @@ void _taskSerialize(
   writer.writeBool(offsets[5], object.isDone);
   writer.writeBool(offsets[6], object.isOverDue);
   writer.writeBool(offsets[7], object.isReminderEnabled);
-  writer.writeLong(offsets[8], object.priority);
-  writer.writeString(offsets[9], object.taskName);
-  writer.writeDateTime(offsets[10], object.updatedOn);
+  writer.writeBool(offsets[8], object.isTodaysTask);
+  writer.writeBool(offsets[9], object.isUpcomingTask);
+  writer.writeLong(offsets[10], object.priority);
+  writer.writeString(offsets[11], object.taskName);
+  writer.writeDateTime(offsets[12], object.updatedOn);
 }
 
 Task _taskDeserialize(
@@ -135,9 +147,9 @@ Task _taskDeserialize(
   object.id = id;
   object.isCompleted = reader.readBoolOrNull(offsets[4]);
   object.isReminderEnabled = reader.readBool(offsets[7]);
-  object.priority = reader.readLong(offsets[8]);
-  object.taskName = reader.readString(offsets[9]);
-  object.updatedOn = reader.readDateTime(offsets[10]);
+  object.priority = reader.readLong(offsets[10]);
+  object.taskName = reader.readString(offsets[11]);
+  object.updatedOn = reader.readDateTime(offsets[12]);
   return object;
 }
 
@@ -165,10 +177,14 @@ P _taskDeserializeProp<P>(
     case 7:
       return (reader.readBool(offset)) as P;
     case 8:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 9:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 10:
+      return (reader.readLong(offset)) as P;
+    case 11:
+      return (reader.readString(offset)) as P;
+    case 12:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -663,6 +679,26 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterFilterCondition> isTodaysTaskEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isTodaysTask',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> isUpcomingTaskEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isUpcomingTask',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterFilterCondition> priorityEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -999,6 +1035,30 @@ extension TaskQuerySortBy on QueryBuilder<Task, Task, QSortBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsTodaysTask() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isTodaysTask', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsTodaysTaskDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isTodaysTask', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsUpcomingTask() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isUpcomingTask', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsUpcomingTaskDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isUpcomingTask', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> sortByPriority() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'priority', Sort.asc);
@@ -1145,6 +1205,30 @@ extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsTodaysTask() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isTodaysTask', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsTodaysTaskDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isTodaysTask', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsUpcomingTask() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isUpcomingTask', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsUpcomingTaskDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isUpcomingTask', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> thenByPriority() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'priority', Sort.asc);
@@ -1232,6 +1316,18 @@ extension TaskQueryWhereDistinct on QueryBuilder<Task, Task, QDistinct> {
     });
   }
 
+  QueryBuilder<Task, Task, QDistinct> distinctByIsTodaysTask() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isTodaysTask');
+    });
+  }
+
+  QueryBuilder<Task, Task, QDistinct> distinctByIsUpcomingTask() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isUpcomingTask');
+    });
+  }
+
   QueryBuilder<Task, Task, QDistinct> distinctByPriority() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'priority');
@@ -1304,6 +1400,18 @@ extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
   QueryBuilder<Task, bool, QQueryOperations> isReminderEnabledProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isReminderEnabled');
+    });
+  }
+
+  QueryBuilder<Task, bool, QQueryOperations> isTodaysTaskProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isTodaysTask');
+    });
+  }
+
+  QueryBuilder<Task, bool, QQueryOperations> isUpcomingTaskProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isUpcomingTask');
     });
   }
 
