@@ -3,6 +3,7 @@ import 'package:flutter_dropdown_alert/alert_controller.dart';
 import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:isar/isar.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:taskgo/database/main_repository.dart';
 import 'package:taskgo/features/add_task/add_task.dart';
 import 'package:taskgo/util/constants.dart';
@@ -178,5 +179,14 @@ class AllTasksProvider extends ChangeNotifier {
       default:
         return null;
     }
+  }
+
+//Provider method to share a task
+  void shareTask(Task task) {
+    //Open share intent to share the task
+    Share.share(
+      task.toString(),
+      subject: task.taskName,
+    );
   }
 }

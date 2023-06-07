@@ -107,7 +107,7 @@ class TaskItem extends StatelessWidget {
                       ),
                       task.isReminderEnabled
                           ? Icon(
-                              Icons.notification_add,
+                              Icons.notifications_active_outlined,
                               color: primaryColor.withOpacity(0.4),
                             )
                           : const Offstage(),
@@ -159,6 +159,35 @@ class TaskItem extends StatelessWidget {
                                 : AppTheme.text3,
                           ),
                         ],
+                      ),
+                    ],
+                  ),
+                  //Creates share task button
+                  Row(
+                    children: [
+                      const Spacer(),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          //Call provider method to share task
+                          allTasksProvider.shareTask(task);
+                        },
+                        style: const ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.white),
+                          elevation: MaterialStatePropertyAll(0),
+                        ),
+                        icon: Icon(
+                          Icons.share,
+                          color: primaryColor.withOpacity(0.8),
+                        ),
+                        label: Text(
+                          "Share task",
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.4),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ],
                   ),

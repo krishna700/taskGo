@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:taskgo/util/constants.dart';
+import 'package:taskgo/util/extension.dart';
 import 'package:taskgo/util/util.dart';
 
 part 'task.g.dart';
@@ -72,5 +73,19 @@ class Task {
     //is not overdue
     //which implies the task is today's task
     return isDateUpcoming(dueDateTime!) && !isOverDue && !isDone;
+  }
+
+  //override the toString method of a task
+  //We will use this string to share the task in email/phone
+  @override
+  String toString() {
+    String name = "Task Name : $taskName";
+    String desc =
+        isStringValid(description) ? "Description : $description" : '';
+    String due =
+        hasDueDate ? "Due On : ${dueDateTime!.format(Constants.deadline)}" : '';
+
+    String prior = "Priority : ${Constants.taskPriorities[priority]}";
+    return '$name \n $desc \n $due \n $prior';
   }
 }
