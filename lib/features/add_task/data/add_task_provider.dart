@@ -4,6 +4,7 @@ import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
 import 'package:taskgo/features/add_task/add_task.dart';
+import 'package:taskgo/util/notification_util.dart';
 import 'package:taskgo/util/util.dart';
 
 class AddTaskProvider extends ChangeNotifier {
@@ -28,14 +29,30 @@ class AddTaskProvider extends ChangeNotifier {
     //task name is not empty, save the task
     //Show a loader
     overlayLoader.show();
-    //init task createdOn, if id is null
+
+    //init task createdOn, when id is null
     if (task.id == null) {
       task.createdOn = DateTime.now();
+    }
+    //else when id is not null
+    //Disbale the task reminder is user is disbaling the reminder
+    //while updating
+    else {
+      if (!task.isReminderEnabled) {
+        NotificationUtil.cancelscheduledNotification(task.id!);
+      }
     }
     //init task updated On
     task.updatedOn = DateTime.now();
     //Save the task
-    await _repository.saveTask(task);
+    int? taskId = await _repository.saveTask(task);
+    //Set the recieved taskId value
+    task.id = taskId;
+    //schedule task reminder
+    if (task.isReminderEnabled) {
+      NotificationUtil.scheduleNewNotification(task: task);
+    }
+
     //hide the loader
     overlayLoader.hide();
     //show success alert
@@ -73,6 +90,8 @@ class AddTaskProvider extends ChangeNotifier {
         overlayLoader.hide();
 
         if (isDeleted) {
+          //Cancel scheduled notification if any
+          NotificationUtil.cancelscheduledNotification(task.id!);
           //show success alert
           AlertController.show(
             "Success!",

@@ -6,6 +6,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:taskgo/database/main_repository.dart';
 import 'package:taskgo/features/add_task/add_task.dart';
 import 'package:taskgo/util/constants.dart';
+import 'package:taskgo/util/notification_util.dart';
 
 import 'all_tasks_repository.dart';
 
@@ -90,6 +91,11 @@ class AllTasksProvider extends ChangeNotifier {
 
     //task updated On
     task.updatedOn = DateTime.now();
+
+    //Cancel scheduled notification if any when task is done
+    if (task.isDone) {
+      NotificationUtil.cancelscheduledNotification(task.id!);
+    }
 
     //complete the task
     await _repository.updateTaskStatus(task);

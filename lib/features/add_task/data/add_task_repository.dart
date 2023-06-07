@@ -4,17 +4,20 @@ import 'package:taskgo/features/add_task/add_task.dart';
 ///[AddTaskRepository] handles all the DB calls for task Create Update Delete
 class AddTaskRepository {
   //Saves a task in db
-  Future saveTask(Task task) async {
+  Future<int?> saveTask(Task task) async {
     try {
+      int? newTaskId;
       //add a delay
       Future.delayed(const Duration(milliseconds: 200));
       //put the task in collection
       await isarDb.writeTxn(() async {
-        await isarDb.tasks.put(task);
+        newTaskId = await isarDb.tasks.put(task);
       });
       //add a delay
       Future.delayed(const Duration(milliseconds: 2000));
+      return newTaskId;
     } catch (_) {
+      return null;
       //Catch any error
       //Send it to a crash reporting tool
     }

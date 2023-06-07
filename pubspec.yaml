@@ -64,7 +64,7 @@ dependencies:
 
   #Provides internationalization and localization facilities, 
   #including message translation, plurals and genders, date/number formatting and parsing, and bidirectional text.
-  intl: ^0.18.1
+  intl: ^0.17.0
 
   #Provides an option to notify users about success, errors or any message
   flutter_dropdown_alert: ^1.0.7
@@ -75,8 +75,8 @@ dependencies:
   #Animated loading indicator
   flutter_spinkit: ^5.2.0
   
-  #Enables lazy loading of lists/grids
-  infinite_scroll_pagination: ^3.2.0
+  #Add notification capability
+  flutter_local_notifications: ^14.1.1
 
 
 

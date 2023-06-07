@@ -1,6 +1,8 @@
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dropdown_alert/alert_controller.dart';
+import 'package:flutter_dropdown_alert/model/data_alert.dart';
 import 'package:provider/provider.dart';
 import 'package:taskgo/config/config.dart';
 import 'package:taskgo/features/add_task/add_task.dart';
@@ -203,7 +205,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               ),
             ),
             Text(
-              "We will remind you 30 mins prior",
+              "We will remind you 30 seconds prior",
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey,
@@ -215,6 +217,24 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         CupertinoSwitch(
           value: task.isReminderEnabled,
           onChanged: (value) {
+            //when value is true user is trying to enable the reminder
+            if (value) {
+              //Don't enable reminder if due on is null
+              if (!task.hasDueDate) {
+                AlertController.show(
+                  "Unable to add reminder",
+                  "Please add due on to enable reminder",
+                  TypeAlert.warning,
+                );
+                return;
+              }
+              //set the value of task reminder
+              setState(() {
+                task.isReminderEnabled = value;
+              });
+              return;
+            }
+            //set the value of task reminder
             setState(() {
               task.isReminderEnabled = value;
             });
