@@ -12,7 +12,7 @@ class EmptyTaskWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Lottie.asset(
-          'assets/lottie/search.json',
+          'assets/lottie/add_task.json',
           repeat: false,
           width: MediaQuery.of(context).size.width,
           height: 360,
