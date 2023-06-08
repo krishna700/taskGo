@@ -15,7 +15,7 @@ Set Reminders
 Task Dashboard
 Share task
 
-Release APkK file :- https://drive.google.com/file/d/1NpIBW1UhWFzsrHW99ZhAHbXy88BhqbtO/view?usp=sharing
+Release APK file :- https://drive.google.com/file/d/1NpIBW1UhWFzsrHW99ZhAHbXy88BhqbtO/view?usp=sharing
 
 
 
