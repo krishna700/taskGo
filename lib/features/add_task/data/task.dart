@@ -85,7 +85,7 @@ class Task {
     String due =
         hasDueDate ? "Due On : ${dueDateTime!.format(Constants.deadline)}" : '';
 
-    String prior = "Priority : ${Constants.taskPriorities[priority]}";
+    String prior = "Priority : ${Constants.taskPriorities[priority - 1]}";
     return '$name \n $desc \n $due \n $prior';
   }
 }
