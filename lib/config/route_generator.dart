@@ -32,13 +32,13 @@ class RouteGenerator {
           builder: (context) => const AddTaskScreen(),
         );
     }
-    return _generateErrorRoute();
+    return null;
   }
 
   ///Returns an error widget when a null route is encountered
   ///In general [generateRoute] shouldn't return null
 
-  static Route<dynamic> _generateErrorRoute() {
+  static Route<dynamic> generateErrorRoute() {
     return MaterialPageRoute(builder: (context) {
       return Scaffold(
         appBar: AppBar(

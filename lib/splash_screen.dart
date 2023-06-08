@@ -3,6 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:taskgo/config/config.dart';
 
 import 'util/delayed_widget.dart';
+import 'util/notification_util.dart';
 
 ///[SplashScreen] is the initial widget pushed in the stack
 ///After the splashScreen we navigate to the [HomeScreen]
@@ -87,5 +88,11 @@ class _SplashScreenState extends State<SplashScreen>
 //This method navigates to home screen, after poping the splash screen
   void _navigateToHome() {
     Navigator.of(context).pushReplacementNamed(homeRoute);
+    _initNotifications();
+  }
+
+  void _initNotifications() {
+    //init local notifications
+    NotificationUtil.initNotification();
   }
 }
